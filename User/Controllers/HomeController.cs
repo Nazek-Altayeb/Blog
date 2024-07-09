@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using User.Data.Repository;
 using User.Models;
 
 namespace User.Controllers
@@ -10,14 +11,18 @@ namespace User.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private IRepository _repo;
+
+        public HomeController(ILogger<HomeController> logger, IRepository repo)
         {
             _logger = logger;
+            _repo = repo;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var posts = _repo.GetAllPosts();
+            return View(posts);
         }
 
         public IActionResult Privacy()

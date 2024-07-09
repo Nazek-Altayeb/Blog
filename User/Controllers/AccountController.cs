@@ -15,16 +15,16 @@ namespace User.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult Register(string? returnUrl = null)
+        [HttpGet]
+        public IActionResult Register()
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
+
+            return View(new Register());
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(Register model, string? returnUrl=null)
+        public async Task<IActionResult> Register(Register model)
         {
-            ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
                 Account account = new()
@@ -40,7 +40,7 @@ namespace User.Controllers
                 {
                     await signInManager.SignInAsync(account, false);
 
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Home");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -50,10 +50,9 @@ namespace User.Controllers
             return View(model);
         }
 
-        public IActionResult Login(string? returnUrl = null)
+        [HttpGet]
+        public IActionResult Login()
         {
-
-            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
@@ -65,7 +64,7 @@ namespace User.Controllers
                 var result = await signInManager.PasswordSignInAsync(model.Username!, model.Password!, model.RememberMe!, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Post");
                 }
                 ModelState.AddModelError("", "Failed to login");
             }
@@ -79,11 +78,6 @@ namespace User.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private IActionResult RedirectToLocal(string? returnUrl)
-        {
-            return !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
-                ? Redirect(returnUrl)
-                : RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
-        }
+
     }
 }

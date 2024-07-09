@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using User.Data;
+using User.Data.Repository;
 using User.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,8 @@ builder.Services.AddIdentity<Account, IdentityRole>(
      })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddTransient<IRepository, Repository>();
 
 var app = builder.Build();
 
