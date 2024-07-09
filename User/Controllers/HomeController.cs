@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using User.Data.Repository;
 using User.Models;
+using User.ViewModels;
 
 namespace User.Controllers
 {
@@ -19,10 +20,49 @@ namespace User.Controllers
             _repo = repo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string category, string search)
         {
-            var posts = _repo.GetAllPosts();
-            return View(posts);
+            var vm = _repo.GetAllPosts(category, search);
+
+            return View(vm);
+        }
+
+        public IActionResult Post(int id) => View(_repo.GetPost(id));
+
+
+        [HttpPost]
+        public async Task<IActionResult> Comment(CommentViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Post", new { id = model.PostId });
+
+            var post = _repo.GetPost(model.PostId);
+            if (model.MainCommentId == 0)
+            {
+                post.MainComments = post.MainComments ?? new List<MainComment>();
+
+                post.MainComments.Add(new MainComment
+                {
+                    Opinion = model.Opinion,
+                    Created = DateTime.Now,
+                });
+
+                _repo.UpdatePost(post);
+            }
+            else
+            {
+                var reply = new Reply
+                {
+                    MainCommentId = model.MainCommentId,
+                    Opinion = model.Opinion,
+                    Created = DateTime.Now,
+                };
+                _repo.AddReply(reply);
+            }
+
+            await _repo.SaveChangesAsync();
+
+            return RedirectToAction("Post", new { id = model.PostId });
         }
 
         public IActionResult Privacy()

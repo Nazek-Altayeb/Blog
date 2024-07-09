@@ -15,6 +15,6 @@
 
         public DateTime Created { get; set; } = DateTime.Now;
 
-        public List<MainComment> MainComments { get; set; }
+        public List<MainComment>? MainComments { get; set; } = null;
     }
 }

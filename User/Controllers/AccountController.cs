@@ -64,7 +64,7 @@ namespace User.Controllers
                 var result = await signInManager.PasswordSignInAsync(model.Username!, model.Password!, model.RememberMe!, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Post");
+                    return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Failed to login");
             }

@@ -1,1 +1,50 @@
-﻿
+﻿@using User.Models;
+@using User.ViewModels
+@model Post
+
+@{
+    ViewBag.Title = Model.Title;
+    ViewBag.Description = Model.Description;
+}
+
+
+<div class="container">
+ 
+    <div class="post-body">
+        @Html.Raw(Model.Body)
+    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="comment-section">
+            @{
+                await Html.RenderPartialAsync("_MainComment", new CommentViewModel { PostId = Model.Id, MainCommentId = 0 });
+            }
+
+            @foreach (var c in Model.MainComments)
+            {
+                <p>
+                    @c.Opinion --- @c.Created
+                </p>
+                <div style="margin-left: 20px;">
+                    <h4>Replies</h4>
+                    @{
+                        await Html.RenderPartialAsync("_MainComment", new CommentViewModel { PostId = Model.Id, MainCommentId = c.Id });
+                    }
+
+                    @foreach (var sc in c.Replies)
+                    {
+                        <p>
+                            @sc.Opinion --- @sc.Created
+                        </p>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div>
+            <a asp-action="Login" asp-controller="Account">Sign In</a> in order to add a comment !
+        </div>
+    }
+</div>

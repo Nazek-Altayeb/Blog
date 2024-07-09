@@ -1,17 +1,29 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
+﻿@using User.ViewModels;
+@model IndexViewModel
 
 <h2>Home Page!</h2>
 
 
+<div class="main-img">
+    <span class="title">Amazing Blog Site</span>
+    <form asp-controller="Home" asp-action="Index" method="get">
+        <input type="hidden" name="category" value="@Model.Category" />
+        <input class="search" type="text" name="search" placeholder="Search Blog" value="@Model.Search" />
+        <button class="submit-btn">Search</button>
+    </form>
+</div>
 
 <div class="container">
   
-    <h3> work on list of Posts....! </h3>
+    @foreach (var post in Model.Posts)
+    {
+        <a class="post" asp-controller="Home" asp-action="Post" asp-route-id="@post.Id">
+            <span class="title">
+                @post.Title
+            </span>
+        </a>
+    }
 
-    @*here posts will be listed*@
-
+   
 
 </div>
