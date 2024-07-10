@@ -14,16 +14,24 @@
 </div>
 
 <div class="container">
-  
+
     @foreach (var post in Model.Posts)
     {
-        <a class="post" asp-controller="Home" asp-action="Post" asp-route-id="@post.Id">
-            <span class="title">
-                @post.Title
-            </span>
-        </a>
+
+
+        <div class="card" style="width: 18rem;">
+
+            <div class="card-body">
+                <h5 class="card-title">@post.Title</h5>
+                <p class="card-text">@post.Body</p>
+                <a class="btn btn-primary" asp-controller="Home" asp-action="Post" asp-route-id="@post.Id">
+
+                    <i class="fa-regular fa-comment"></i>
+                </a>
+            </div>
+        </div>
     }
 
-   
+
 
 </div>
