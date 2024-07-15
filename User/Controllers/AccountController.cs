@@ -40,7 +40,7 @@ namespace User.Controllers
                 {
                     await signInManager.SignInAsync(account, false);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Post");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -64,7 +64,7 @@ namespace User.Controllers
                 var result = await signInManager.PasswordSignInAsync(model.Username!, model.Password!, model.RememberMe!, false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Post");
                 }
                 ModelState.AddModelError("", "Failed to login");
             }
@@ -75,7 +75,7 @@ namespace User.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Post");
         }
 
 

@@ -20,12 +20,14 @@ namespace User.Controllers
             _repo = repo;
         }
 
-        public IActionResult Index(string category, string search)
+       public IActionResult Index(string category, string search)
         {
             var vm = _repo.GetAllPosts(category, search);
 
             return View(vm);
         }
+
+       
 
         public IActionResult Post(int id) => View(_repo.GetPost(id));
 

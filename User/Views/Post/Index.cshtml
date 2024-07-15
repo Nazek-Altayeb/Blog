@@ -1,25 +1,50 @@
-﻿@model IEnumerable<Post>
-
+﻿﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<Post>
+@inject SignInManager<Account> signInManager
 
 <a asp-controller="Post" asp-action="Edit">
-    Add New Post
+    Write a new Post
 </a>
 
-<div>
-    <ul>
-        @foreach (var post in Model)
-        {
-            <li>
-                @post.Title
-                -
-                <a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">
-                    Edit
-                </a>
-                -
-                <a asp-controller="Post" asp-action="Remove" asp-route-id="@post.Id">
-                    Remove
-                </a>
-            </li>
-        }
-    </ul>
-</div>
+<div class="container-fluid ">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-sm-6 p-2">
+                @foreach (var post in Model)
+                {
+                    <div class="card special_body" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">@post.Title</h5>
+                            <p class="card-text">@post.Body</p>
+                            @if (User.Identity.IsAuthenticated)
+
+                            {
+
+                                <a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">
+                                    <i class="fa-solid fa-file-pen fa-lg"></i>
+                                </a>
+                                <a asp-controller="Post" asp-action="Remove" asp-route-id="@post.Id">
+                                    <i class="fa-solid fa-trash fa-lg"></i>
+                                </a>
+
+                                <a asp-controller="Post" asp-action="Post" asp-route-id="@post.Id">
+
+                                    <i class="fa-regular fa-comment fa-lg"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <div>
+                                    <a asp-action="Login" asp-controller="Account">Sign In</a> in order to comment !
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                }
+            </div>
+            </<div>
+            </div>
+        </div>
+
+        @* {% if user.id == article.author.id %} *@
