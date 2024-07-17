@@ -1,6 +1,12 @@
 ﻿﻿@using Microsoft.AspNetCore.Identity;
 @model IEnumerable<Post>
-@inject SignInManager<Account> signInManager
+@{
+    var userEmail = ViewData["userEmail"];
+    var userId = ViewData["userId"];
+}
+
+<h3> user email is : @userEmail</h3>
+
 
 <a asp-controller="Post" asp-action="Edit">
     Write a new Post
@@ -17,7 +23,6 @@
                             <h5 class="card-title">@post.Title</h5>
                             <p class="card-text">@post.Body</p>
                             @if (User.Identity.IsAuthenticated)
-
                             {
 
                                 <a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">
@@ -26,7 +31,6 @@
                                 <a asp-controller="Post" asp-action="Remove" asp-route-id="@post.Id">
                                     <i class="fa-solid fa-trash fa-lg"></i>
                                 </a>
-
                                 <a asp-controller="Post" asp-action="Post" asp-route-id="@post.Id">
 
                                     <i class="fa-regular fa-comment fa-lg"></i>
@@ -35,7 +39,7 @@
                             else
                             {
                                 <div>
-                                    <a asp-action="Login" asp-controller="Account">Sign In</a> in order to comment !
+                                    <a asp-action="Login" asp-controller="Account">Sign In</a> in order to comment!
                                 </div>
                             }
 

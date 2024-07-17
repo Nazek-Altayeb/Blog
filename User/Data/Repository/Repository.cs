@@ -21,7 +21,13 @@ namespace User.Data.Repository
             return _context.Posts.ToList();
         }
 
-        public IndexViewModel GetAllPosts(           
+        public List<Post>? GetPostsOfTheCurrentUser(string accountId)
+        {
+            return _context.Posts.Where(acc => acc.AccountId == accountId).ToList();
+
+        }
+
+        public IndexViewModel GetAllPosts(
            string category,
            string search)
         {
@@ -60,6 +66,14 @@ namespace User.Data.Repository
             return result;
         }
 
+        public string? GetAuthorIdByPostId(int id)
+        {
+            return _context.Posts
+                .Include(acc => acc.AccountId)
+                .FirstOrDefault(p => p.Id == id).ToString();
+        }
+
+    
         public void RemovePost(int id)
         {
              _context.Posts.Remove(GetPost(id));

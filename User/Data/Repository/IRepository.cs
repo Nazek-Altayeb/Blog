@@ -6,6 +6,9 @@ namespace User.Data.Repository
     {
         Post GetPost(int id);
         List<Post> GetAllPosts();
+
+        List<Post>? GetPostsOfTheCurrentUser(string accountId);
+        string? GetAuthorIdByPostId(int id);
         public IndexViewModel GetAllPosts(string category, string search);
         void AddPost(Post post);
         void UpdatePost(Post post);

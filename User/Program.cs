@@ -6,7 +6,7 @@ using User.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("default");
+var connectionString = builder.Configuration.GetConnectionString("blog");
 
 
 // Add services to the container.

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using User.Data;
 
@@ -11,9 +12,11 @@ using User.Data;
 namespace User.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240717161253_resolve_not_found_object")]
+    partial class resolve_not_found_object
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,7 +266,7 @@ namespace User.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccountId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Body")
                         .IsRequired()
@@ -289,8 +292,6 @@ namespace User.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
 
                     b.ToTable("Posts");
                 });
@@ -378,13 +379,6 @@ namespace User.Migrations
                         .HasForeignKey("PostId");
                 });
 
-            modelBuilder.Entity("User.Models.Post", b =>
-                {
-                    b.HasOne("User.Models.Account", null)
-                        .WithMany("Posts")
-                        .HasForeignKey("AccountId");
-                });
-
             modelBuilder.Entity("User.Models.Reply", b =>
                 {
                     b.HasOne("User.Models.MainComment", null)
@@ -392,11 +386,6 @@ namespace User.Migrations
                         .HasForeignKey("MainCommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("User.Models.Account", b =>
-                {
-                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("User.Models.MainComment", b =>

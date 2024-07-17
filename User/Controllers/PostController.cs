@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using User.Data.Repository;
@@ -13,16 +14,22 @@ namespace User.Controllers
     public class PostController : Controller
     {
         private IRepository _repo;
+        private readonly UserManager<Account> _userManager;
 
-        public PostController(IRepository repo)
+        public PostController(IRepository repo, UserManager<Account> userManager)
         {
             _repo = repo;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
+            var currentUserId = _userManager.GetUserId(User); // current logged in user
+            ViewData["currentUserId"] = currentUserId;
+            var postsOfTheCurrentUser = _repo.GetPostsOfTheCurrentUser(currentUserId); // retrieve all posts written by the current logged in user.
             var posts = _repo.GetAllPosts();
-            return View(posts);
+            return View(posts);          
+
         }
 
         public IActionResult Post(int id) => View(_repo.GetPost(id));
@@ -66,6 +73,8 @@ namespace User.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            var userId = _userManager.GetUserId(User);
+            // var authorId = _repo.GetAuthorIdByPostId(id)
             if (id == null)
             {
                 return View(new PostViewModel());
@@ -75,8 +84,8 @@ namespace User.Controllers
                 var post = _repo.GetPost((int)id);
                 return View(new PostViewModel
                 {
-                    Id = post.Id,
-                    AccountId = post.AccountId,
+                    //Id = post.Id,
+                    // AccountId = userId,
                     Title = post.Title,
                     Body = post.Body,
                     Description = post.Description,
@@ -90,10 +99,12 @@ namespace User.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(PostViewModel model)
         {
+            var postAuthorId = _userManager.GetUserId(User); // Post-auther Id
+            ViewData["postAuthorId"] = postAuthorId;
             var post = new Post
             {
-                Id = model.Id,
-                AccountId = model.AccountId,
+                //Id = model.Id,
+                AccountId = postAuthorId,
                 Title = model.Title,
                 Body = model.Body,
                 Description = model.Description,
