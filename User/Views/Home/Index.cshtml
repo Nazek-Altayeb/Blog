@@ -1,6 +1,9 @@
 ﻿@using User.ViewModels;
 @model IndexViewModel
 
+@{
+    var currentUserId = ViewData["currentUserId"];
+}
 <h2>Home Page!</h2>
 
 
@@ -23,24 +26,39 @@
                 @foreach (var post in Model.Posts)
                 {
 
-
                     <div class="card special_body" style="width: 18rem;">
 
                         <div class="card-body">
                             <h5 class="card-title">@post.Title</h5>
                             <p class="card-text">@post.Body</p>
-                            <a  asp-controller="Home" asp-action="Post" asp-route-id="@post.Id">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a asp-controller="Post" asp-action="Post" asp-route-id="@post.Id">
 
-                                <i class="fa-regular fa-comment"></i>
-                            </a>
+                                    <i class="fa-regular fa-comment"></i>
+                                </a>
+
+                                @if (post.AccountId == currentUserId.ToString())
+                                {
+                                    <a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">
+                                        <i class="fa-solid fa-file-pen fa-lg"></i>
+                                    </a>
+                                    <a asp-controller="Post" asp-action="Remove" asp-route-id="@post.Id">
+                                        <i class="fa-solid fa-trash fa-lg"></i>
+                                    </a>
+                                }
+                            }
+
                         </div>
                     </div>
+
+
                 }
 
 
 
             </div>
         </div>
-    </<div>
- </div>
+        </<div>
+        </div>
 

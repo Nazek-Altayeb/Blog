@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using User.Data.Repository;
@@ -13,64 +14,34 @@ namespace User.Controllers
         private readonly ILogger<HomeController> _logger;
 
         private IRepository _repo;
+        private readonly UserManager<Account> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, IRepository repo)
+        public HomeController(ILogger<HomeController> logger, IRepository repo, UserManager<Account> userManager)
         {
             _logger = logger;
             _repo = repo;
+            _userManager = userManager;
         }
 
         public IActionResult Index(string category, string search)
          {
-             var vm = _repo.GetAllPosts(category, search);
-
-             return View(vm);
+            // var accountId = "";
+            var currentUserId = _userManager.GetUserId(User); // current logged in user
+            ViewData["currentUserId"] = currentUserId;
+            var postsOfTheCurrentUser = _repo.GetPostsOfTheCurrentUser(currentUserId); // retrieve all posts written by the current logged in user.
+            // get user Id per each post
+            //var allPosts = _repo.GetAllPosts();
+            //foreach (var post in allPosts){
+            //    accountId = post.AccountId;
+            //    ViewData["postAuthorId"] = accountId;
+            //}
+            var posts = _repo.GetAllPosts(category, search);
+            
+                return View(posts);
          }
-
-        //public IActionResult Index()
-        //{
-        //    var posts = _repo.GetAllPosts();
-        //    return View(posts);
-
-        //}
 
         public IActionResult Post(int id) => View(_repo.GetPost(id));
 
-
-        [HttpPost]
-        public async Task<IActionResult> Comment(CommentViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return RedirectToAction("Post", new { id = model.PostId });
-
-            var post = _repo.GetPost(model.PostId);
-            if (model.MainCommentId == 0)
-            {
-                post.MainComments = post.MainComments ?? new List<MainComment>();
-
-                post.MainComments.Add(new MainComment
-                {
-                    Opinion = model.Opinion,
-                    Created = DateTime.Now,
-                });
-
-                _repo.UpdatePost(post);
-            }
-            else
-            {
-                var reply = new Reply
-                {
-                    MainCommentId = model.MainCommentId,
-                    Opinion = model.Opinion,
-                    Created = DateTime.Now,
-                };
-                _repo.AddReply(reply);
-            }
-
-            await _repo.SaveChangesAsync();
-
-            return RedirectToAction("Post", new { id = model.PostId });
-        }
 
         public IActionResult Privacy()
         {

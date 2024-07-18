@@ -27,9 +27,7 @@ namespace User.Controllers
             var currentUserId = _userManager.GetUserId(User); // current logged in user
             ViewData["currentUserId"] = currentUserId;
             var postsOfTheCurrentUser = _repo.GetPostsOfTheCurrentUser(currentUserId); // retrieve all posts written by the current logged in user.
-            var posts = _repo.GetAllPosts();
-            return View(posts);          
-
+            return View(postsOfTheCurrentUser);          
         }
 
         public IActionResult Post(int id) => View(_repo.GetPost(id));
