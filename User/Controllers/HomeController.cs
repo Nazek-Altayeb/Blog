@@ -8,7 +8,7 @@ using User.ViewModels;
 
 namespace User.Controllers
 {
-    [Authorize]
+    // [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -25,16 +25,9 @@ namespace User.Controllers
 
         public IActionResult Index(string category, string search)
          {
-            // var accountId = "";
             var currentUserId = _userManager.GetUserId(User); // current logged in user
             ViewData["currentUserId"] = currentUserId;
             var postsOfTheCurrentUser = _repo.GetPostsOfTheCurrentUser(currentUserId); // retrieve all posts written by the current logged in user.
-            // get user Id per each post
-            //var allPosts = _repo.GetAllPosts();
-            //foreach (var post in allPosts){
-            //    accountId = post.AccountId;
-            //    ViewData["postAuthorId"] = accountId;
-            //}
             var posts = _repo.GetAllPosts(category, search);
             
                 return View(posts);
