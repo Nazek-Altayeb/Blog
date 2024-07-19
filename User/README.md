@@ -28,7 +28,7 @@ Develop online blog page, where user can share opinions with others.
 # Database Design
 
 
-![ERD Diagram](./User/wwwroot/Pics/Blog-DB_Diagram.png)
+![ERD Diagram](./wwwroot/Pics/Blog-DB_Diagram.png)
 
 # Existing Features
 
