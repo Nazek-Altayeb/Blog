@@ -1,14 +1,9 @@
 ﻿# Goal
 
-Develop online magazine where users could participate according to their granted access privileges,
-with this website the user who grant a Moderator privileges can write and manage articles. Besides, 
-every login user can comment, like and bookmark articles, also s/he has his/her own profile where the written and/or bookmarked articles are listed there.
+Develop online blog page, where user can share opinions with others.
 
 
 
-# Target audience
-
-- Readers who are interested in online magazines.
 
 # User Experience
 
